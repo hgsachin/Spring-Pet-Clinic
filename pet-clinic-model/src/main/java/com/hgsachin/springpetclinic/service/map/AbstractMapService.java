@@ -1,13 +1,12 @@
 package com.hgsachin.springpetclinic.service.map;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.hgsachin.springpetclinic.model.BaseEntity;
 
-public abstract class AbstractMapService<T, ID> {
+import java.util.*;
 
-    protected Map<ID, T> map = new HashMap<>();
+public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> {
+
+    protected Map<Long, T> map = new HashMap<>();
 
     Set<T> findAll() {
         return new HashSet<>(map.values());
@@ -17,8 +16,13 @@ public abstract class AbstractMapService<T, ID> {
         return map.get(id);
     }
 
-    T save(ID id, T t) {
-        map.put(id, t);
+    T save(T t) {
+        if (t != null) {
+            if(t.getId() == null) {
+                t.setId(generateNextId());
+            }
+            map.put(t.getId(), t);
+        }
         return t;
     }
 
@@ -28,5 +32,15 @@ public abstract class AbstractMapService<T, ID> {
 
     void delete(T t) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(t));
+    }
+
+    Long generateNextId() {
+        Long nextId = null;
+        try {
+            nextId = Collections.max(map.keySet()) + 1;
+        } catch (Exception e) {
+            nextId = 1L;
+        }
+        return nextId;
     }
 }
