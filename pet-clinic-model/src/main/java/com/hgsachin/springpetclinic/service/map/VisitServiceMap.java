@@ -1,7 +1,7 @@
 package com.hgsachin.springpetclinic.service.map;
 
-import com.hgsachin.springpetclinic.model.PetType;
-import com.hgsachin.springpetclinic.service.PetTypeService;
+import com.hgsachin.springpetclinic.model.Visit;
+import com.hgsachin.springpetclinic.service.VisitService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -9,15 +9,15 @@ import java.util.Set;
 
 @Service
 @Profile({"default", "map"})
-public class PetTypeServiceMap extends AbstractMapService<PetType, Long> implements PetTypeService {
+public class VisitServiceMap extends AbstractMapService<Visit, Long> implements VisitService  {
 
     @Override
-    public PetType findById(Long id) {
+    public Visit findById(Long id) {
         return super.findById(id);
     }
 
     @Override
-    public Set<PetType> findAll() {
+    public Set<Visit> findAll() {
         return super.findAll();
     }
 
@@ -27,12 +27,15 @@ public class PetTypeServiceMap extends AbstractMapService<PetType, Long> impleme
     }
 
     @Override
-    public void delete(PetType t) {
+    public void delete(Visit t) {
         super.delete(t);
     }
 
     @Override
-    public PetType save(PetType t) {
+    public Visit save(Visit t) {
+        if (t.getPet() == null || t.getPet().getOwner() == null) {
+            throw new RuntimeException("Invalid Visit");
+        }
         return super.save(t);
     }
 }

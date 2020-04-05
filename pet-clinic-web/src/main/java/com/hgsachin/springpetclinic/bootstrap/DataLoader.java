@@ -1,10 +1,7 @@
 package com.hgsachin.springpetclinic.bootstrap;
 
 import com.hgsachin.springpetclinic.model.*;
-import com.hgsachin.springpetclinic.service.OwnerService;
-import com.hgsachin.springpetclinic.service.PetTypeService;
-import com.hgsachin.springpetclinic.service.SpecialitiesService;
-import com.hgsachin.springpetclinic.service.VetService;
+import com.hgsachin.springpetclinic.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +14,21 @@ public class DataLoader implements CommandLineRunner {
     private final VetService vetService;
     private final PetTypeService petTypeService;
     private final SpecialitiesService specialitiesService;
+    private final VisitService visitService;
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialitiesService specialitiesService) {
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService,
+                      SpecialitiesService specialitiesService, VisitService visitService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialitiesService = specialitiesService;
+        this.visitService = visitService;
     }
 
     @Override
     public void run(String... args) throws Exception {
         int count = petTypeService.findAll().size();
+        System.out.println("Count is " + count);
         if (count == 0) loadInitialData();
     }
 
@@ -64,6 +65,12 @@ public class DataLoader implements CommandLineRunner {
         owner1.getPets().add(johnsPet);
         ownerService.save(owner1);
 
+        Visit snoopyVisit = new Visit();
+        snoopyVisit.setDate(LocalDate.now());
+        snoopyVisit.setPet(johnsPet);
+        snoopyVisit.setDescription("Hyper active dog");
+        visitService.save(snoopyVisit);
+
         Owner owner2 = new Owner();
         owner2.setFirstName("Reggie");
         owner2.setLastName("Johnson");
@@ -74,6 +81,12 @@ public class DataLoader implements CommandLineRunner {
         reggiesPet.setName("Garfield");
         owner2.getPets().add(reggiesPet);
         ownerService.save(owner2);
+
+        Visit garfieldVisit = new Visit();
+        garfieldVisit.setDate(LocalDate.now());
+        garfieldVisit.setPet(reggiesPet);
+        garfieldVisit.setDescription("Dead Lazy cat");
+        visitService.save(garfieldVisit);
 
         System.out.println("Loaded Owners");
 
