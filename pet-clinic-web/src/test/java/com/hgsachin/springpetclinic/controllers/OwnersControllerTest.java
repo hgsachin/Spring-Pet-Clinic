@@ -45,7 +45,7 @@ class OwnersControllerTest {
     @Test
     void listOwners() throws Exception {
         when(ownerService.findAll()).thenReturn(owners);
-        mockMvc.perform(get("/owners"))
+        mockMvc.perform(get("/owners/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("owners/index"))
                 .andExpect(model().attribute("owners", hasSize(2)));
@@ -55,7 +55,7 @@ class OwnersControllerTest {
     void findOwners() throws Exception {
         mockMvc.perform(get("/owners/find"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("notImplemented"));
+                .andExpect(view().name("owners/findOwners"));
 
         verifyNoInteractions(ownerService);
     }
